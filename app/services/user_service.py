@@ -1,9 +1,9 @@
 from sqlalchemy.orm import Session
-from app.exceptions.user import UserAlreadyExistsError
 from app.models.user import User
 from app.repositories.user_repository import UserRepository
 from app.schemas.user import UserCreate
-from app.exceptions.user import UserNotFoundError
+from app.exceptions.user import UserAlreadyExistsError, UserNotFoundError
+from app.core.security import hash_password
 
 
 class UserService:
@@ -29,7 +29,7 @@ class UserService:
         user = User(
             email=user_data.email,
             full_name=user_data.full_name,
-            password_hash=user_data.password,  # Temporary
+            password_hash=hash_password(user_data.password),
         )
 
         return self.user_repository.create(user)

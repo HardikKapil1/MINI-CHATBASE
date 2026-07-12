@@ -2,20 +2,23 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class Settings(BaseSettings):
-    app_name: str = "Mini Chatbase"
-    app_version: str = "1.0.0"
+    app_name: str
+    app_version: str
 
-    debug: bool = False
-    api_v1_str: str = "/api/v1"
+    debug: bool
 
-    host: str = "127.0.0.1"
-    port: int = 8000
+    api_v1_str: str
 
-    database_url: str 
+    database_url: str
 
-    jwt_secret: str = ""
-    openai_api_key: str = ""
-    redis_url: str = ""
+    jwt_secret: str
+    jwt_algorithm: str
+    access_token_expire_minutes: int
+
+    model_config = SettingsConfigDict(
+        env_file=".env",
+        extra="ignore",
+    )
 
     model_config = SettingsConfigDict(
         env_file=".env",
@@ -23,4 +26,4 @@ class Settings(BaseSettings):
     )
 
 
-settings = Settings() # type: ignore
+settings = Settings()  # type: ignore
