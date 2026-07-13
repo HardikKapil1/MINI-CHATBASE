@@ -7,9 +7,7 @@ from alembic import context
 
 from app.core.config import settings
 from app.core.database import Base
-
-# Import all models so SQLAlchemy registers them
-from app.models.user import User
+import app.models  # noqa: F401
 
 
 # this is the Alembic Config object, which provides

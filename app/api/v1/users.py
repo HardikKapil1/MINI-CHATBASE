@@ -1,5 +1,4 @@
 from fastapi import APIRouter, Depends
-from app.exceptions.user import UserNotFoundError
 from app.api.deps import DBSession, get_current_user
 from app.schemas.user import UserCreate, UserResponse
 from app.services.user_service import UserService
@@ -9,6 +8,16 @@ router = APIRouter(
     prefix="/users",
     tags=["Users"],
 )
+
+
+@router.get(
+    "/me",
+    response_model=UserResponse,
+)
+def me(
+    current_user: User = Depends(get_current_user),
+):
+    return current_user
 
 
 @router.get(
@@ -32,13 +41,3 @@ def create_user(
     db: DBSession,
 ):
     return UserService(db).create_user(user)
-
-
-@router.get(
-    "/me",
-    response_model=UserResponse,
-)
-def me(
-    current_user: User = Depends(get_current_user),
-):
-    return current_user

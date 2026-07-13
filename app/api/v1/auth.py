@@ -1,5 +1,5 @@
-from fastapi import APIRouter
-
+from fastapi import APIRouter, Depends
+from fastapi.security import OAuth2PasswordRequestForm
 from app.api.deps import DBSession
 from app.exceptions.auth import InvalidCredentialsError
 from app.schemas.auth import (
@@ -19,11 +19,10 @@ router = APIRouter(
     response_model=TokenResponse,
 )
 def login(
-    login_data: LoginRequest,
     db: DBSession,
+    form_data: OAuth2PasswordRequestForm = Depends(),
 ):
-
-    token = AuthService(db).login(login_data)
+    token = AuthService(db).login(form_data)
 
     return TokenResponse(
         access_token=token,

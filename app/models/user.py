@@ -1,9 +1,8 @@
-from datetime import datetime
-
+from datetime import UTC, datetime
 from sqlalchemy import String, Boolean, DateTime
-from sqlalchemy.orm import Mapped, mapped_column
-
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.core.database import Base
+from app.models.chat import Chat
 
 
 class User(Base):
@@ -35,5 +34,8 @@ class User(Base):
 
     created_at: Mapped[datetime] = mapped_column(
         DateTime,
-        default=datetime.utcnow,
+        default=lambda: datetime.now(UTC),
+    )
+    chats: Mapped[list["Chat"]] = relationship(
+        back_populates="user",
     )
