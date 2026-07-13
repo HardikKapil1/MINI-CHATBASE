@@ -13,6 +13,12 @@ from sqlalchemy.orm import (
 )
 
 from app.core.database import Base
+from app.models.user import User
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from app.models.document import Document
+    from app.models.user import User
 
 
 class Chat(Base):
@@ -41,7 +47,10 @@ class Chat(Base):
         default=lambda: datetime.now(UTC),
     )
 
-    user = relationship(
-        "User",
+    user: Mapped["User"] = relationship(
         back_populates="chats",
+    )
+
+    documents: Mapped[list["Document"]] = relationship(
+        back_populates="chat",
     )

@@ -2,7 +2,10 @@ from datetime import UTC, datetime
 from sqlalchemy import String, Boolean, DateTime
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.core.database import Base
-from app.models.chat import Chat
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from app.models.chat import Chat
 
 
 class User(Base):
