@@ -11,6 +11,7 @@ from app.exceptions.chat import (
     ChatNotFoundError,
     ChatAccessDeniedError,
 )
+from app.ai.document_processor import DocumentProcessor
 
 UPLOAD_DIR = Path("uploads")
 UPLOAD_DIR.mkdir(exist_ok=True)
@@ -20,7 +21,7 @@ class DocumentService:
     def __init__(self, db: Session):
         self.document_repository = DocumentRepository(db)
         self.chat_repository = ChatRepository(db)
-
+        self.document_processor = DocumentProcessor()
     def upload_document(
         self,
         chat_id: int,
@@ -44,6 +45,10 @@ class DocumentService:
         with open(file_path, "wb") as buffer:
             while chunk := file.file.read(1024 * 1024):
                 buffer.write(chunk)
+        text = self.document_processor.extract_text(file_path)
+        print("=" * 50)
+        print(text)
+        print("=" * 50)
 
         # 4. Create and Persist Database Record
         document = Document(

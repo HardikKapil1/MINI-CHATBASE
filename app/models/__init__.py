@@ -1,3 +1,4 @@
-from .user import User #noqa: F401
-from .chat import Chat #noqa: F401
-from .document import Document  #noqa: F401
+from .user import User #noqa 
+from .chat import Chat #noqa 
+from .document import Document #noqa 
+from .document_chunk import DocumentChunk #noqa 

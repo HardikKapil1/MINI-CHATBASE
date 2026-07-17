@@ -1,4 +1,4 @@
-from datetime import datetime, UTC
+from datetime import UTC, datetime
 
 from sqlalchemy import (
     String,
@@ -14,10 +14,13 @@ from sqlalchemy.orm import (
 )
 
 from app.core.database import Base
+from app.enums.document_status import DocumentStatus
+
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from app.models.chat import Chat
+    from app.models.document_chunk import DocumentChunk
 
 
 class Document(Base):
@@ -48,11 +51,30 @@ class Document(Base):
         ForeignKey("chats.id"),
     )
 
+    status: Mapped[str] = mapped_column(
+        String(20),
+        default=DocumentStatus.UPLOADED.value,
+    )
+
+    error_message: Mapped[str | None] = mapped_column(
+        String(500),
+        nullable=True,
+    )
     created_at: Mapped[datetime] = mapped_column(
-        DateTime,
+        DateTime(timezone=True),
         default=lambda: datetime.now(UTC),
+    )
+
+    updated_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        default=lambda: datetime.now(UTC),
+        onupdate=lambda: datetime.now(UTC),
     )
 
     chat: Mapped["Chat"] = relationship(
         back_populates="documents",
+    )
+    chunks: Mapped[list["DocumentChunk"]] = relationship(
+        back_populates="document",
+        cascade="all, delete-orphan",
     )
